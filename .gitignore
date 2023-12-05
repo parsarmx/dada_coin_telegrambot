@@ -2,3 +2,6 @@ venv/
 .env
 logs.txt
 TelegramBot.session
+*.pyc
+SafeTrade.session
+SafeTrade.session-journal
