@@ -1,4 +1,5 @@
-from pyrogram import Client, filters
+from pyrogram.client import Client
+from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -13,34 +14,32 @@ from SafeTrade.config import OWNER_USERID, SUDO_USERID
 
 START_BUTTON = [
     [
-        InlineKeyboardButton("📖 Commands", callback_data="COMMAND_BUTTON"),
-        InlineKeyboardButton("👨‍💻 About me", callback_data="ABOUT_BUTTON"),
+        InlineKeyboardButton("📖 فروش", callback_data="TRADE_BUTTON"),
+        InlineKeyboardButton("👨‍💻 نحوه استفاده", callback_data="ABOUT_BUTTON"),
     ],
 ]
 
-COMMAND_BUTTON = [
+
+TRADE_BUTTON = [
+    [InlineKeyboardButton("شروع فروش", callback_data="START_TRADE")],
     [
-        InlineKeyboardButton("Users", callback_data="USER_BUTTON"),
-        InlineKeyboardButton("Sudo", callback_data="SUDO_BUTTON"),
+        InlineKeyboardButton("🔙 Go Back", callback_data="START_BUTTON"),
     ],
-    [InlineKeyboardButton("Developer", callback_data="DEV_BUTTON")],
-    [InlineKeyboardButton("🔙 Go Back", callback_data="START_BUTTON")],
 ]
 
 GOBACK_1_BUTTON = [[InlineKeyboardButton("🔙 Go Back", callback_data="START_BUTTON")]]
-GOBACK_2_BUTTON = [[InlineKeyboardButton("🔙 Go Back", callback_data="COMMAND_BUTTON")]]
+# GOBACK_2_BUTTON = [[InlineKeyboardButton("🔙 Go Back", callback_data="TRADE_BUTTON")]]
 
 
-@Client.on_message(filters.command(["start", "help"]))
+@Client.on_message(filters.command(["start", "help"]))  # type: ignore
 @rate_limiter
 async def start(_, message: Message):
-    # await database.saveUser(message.from_user)
     return await message.reply_text(
         START_CAPTION, reply_markup=InlineKeyboardMarkup(START_BUTTON), quote=True
     )
 
 
-@Client.on_callback_query(filters.regex("_BUTTON"))
+@Client.on_callback_query(filters.regex("_BUTTON"))  # type: ignore
 @rate_limiter
 async def botCallbacks(_, CallbackQuery: CallbackQuery):
     clicker_user_id = CallbackQuery.from_user.id
@@ -49,15 +48,19 @@ async def botCallbacks(_, CallbackQuery: CallbackQuery):
     if clicker_user_id != user_id:
         return await CallbackQuery.answer("This command is not initiated by you.")
 
-    if CallbackQuery.data == "SUDO_BUTTON":
-        if clicker_user_id not in SUDO_USERID:
-            return await CallbackQuery.answer(
-                "You are not in the sudo user list.", show_alert=True
-            )
+    if CallbackQuery.data == "ABOUT_BUTTON":
         await CallbackQuery.edit_message_text(
-            SUDO_TEXT, reply_markup=InlineKeyboardMarkup(GOBACK_2_BUTTON)
+            ABOUT_CAPTION, reply_markup=InlineKeyboardMarkup(GOBACK_1_BUTTON)
         )
-    elif CallbackQuery.data == "COMMAND_BUTTON":
+
+    elif CallbackQuery.data == "TRADE_BUTTON":
         await CallbackQuery.edit_message_text(
-            COMMAND_CAPTION, reply_markup=InlineKeyboardMarkup(COMMAND_BUTTON)
+            TRADE_CAPTION, reply_markup=InlineKeyboardMarkup(TRADE_BUTTON)
         )
+
+    elif CallbackQuery.data == "START_BUTTON":
+        await CallbackQuery.edit_message_text(
+            START_CAPTION, reply_markup=InlineKeyboardMarkup(START_BUTTON)
+        )
+
+    await CallbackQuery.answer()

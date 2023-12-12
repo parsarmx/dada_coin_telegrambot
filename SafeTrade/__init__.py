@@ -48,7 +48,7 @@ plugins = dict(root="SafeTrade/plugins")
 bot = Client(
     "SafeTrade",
     api_id=config.API_ID,
-    api_hash=config.API_HASH,
-    bot_token=config.BOT_TOKEN,
+    api_hash=config.API_HASH,  # type: ignore
+    bot_token=config.BOT_TOKEN,  # type: ignore
     plugins=plugins,
 )

@@ -1,5 +1,5 @@
 from typing import Callable, Union
-from pyrogram import Client
+from pyrogram.client import Client
 from functools import wraps
 from cachetools import TTLCache
 from pyrogram.types import CallbackQuery, Message

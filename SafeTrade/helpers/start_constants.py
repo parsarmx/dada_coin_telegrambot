@@ -27,6 +27,10 @@ SUDO_TEXT = """
 """
 
 
-START_CAPTION = """Hey there!! I am simple TelegramBot which is made for the purpose for trying, testing, deploying and learning about telegram bot using python pyrogram framework. \n\nUse buttons to navigate and know more about me :)"""
+START_CAPTION = """دادا کوین \n خوش اومدید به ربات فروش دادا کوین اینجا میتونید با خیال و با سرعت بالا کویناتونو رد کنید بره و عشق کنید \n بزن بریم..."""
 
-COMMAND_CAPTION = """**Here are the list of commands which you can use in bot.\n**"""
+TRADE_CAPTION = """**Here are the list of commands which you can use in bot.\n**"""
+
+ABOUT_CAPTION = "برای استفاده از این ربات باید کیر پارسا را بخورید"
+
+START_TRADE_CAPTION = "برای شروع فروش مقدار سفارش خودتون رو وارد کنید \n مثال: 100000 "
