@@ -9,7 +9,6 @@ from pyrate_limiter import (
 )
 
 
-# test
 class RateLimiter:
     """
     Implement rate limit logic using leaky bucket
