@@ -4,11 +4,10 @@ import time
 from asyncio import get_event_loop, new_event_loop, set_event_loop
 import uvloop
 
-from pyrogram import Client
+from pyrogram.client import Client
 from SafeTrade import config
 from SafeTrade.logging import LOGGER
-
-# from SafeTrade.database
+from SafeTrade.database.MongoDB.MongoDb import check_mongo_uri
 
 uvloop.install()
 LOGGER(__name__).info("Starting SafeTrade Bot...")
@@ -42,6 +41,8 @@ LOGGER(__name__).info(
 """
 )
 LOGGER(__name__).info("initiating the client....")
+LOGGER(__name__).info("checking MongoDb URI....")
+loop.run_until_complete(check_mongo_uri(config.MONGO_URI))  # type: ignore
 
 
 plugins = dict(root="SafeTrade/plugins")

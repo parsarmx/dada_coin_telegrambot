@@ -25,7 +25,6 @@ def rate_limiter(func: Callable) -> Callable:
 
         if is_limited and userid not in warned_users:
             if isinstance(update, Message):
-                await update.reply_text(warning_message)
                 warned_users[userid] = 1
                 return
 
