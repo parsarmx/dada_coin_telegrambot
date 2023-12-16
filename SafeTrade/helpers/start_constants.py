@@ -31,6 +31,6 @@ START_CAPTION = """دادا کوین \n خوش اومدید به ربات فرو
 
 TRADE_CAPTION = """**Here are the list of commands which you can use in bot.\n**"""
 
-ABOUT_CAPTION = "برای استفاده از این ربات باید کیر پارسا را بخورید"
+ABOUT_CAPTION = "صفحه درباره ما ... بعدا در رابط با این بخش باید بحث بشه"
 
 START_TRADE_CAPTION = "برای شروع فروش مقدار سفارش خودتون رو وارد کنید \n مثال: 100000 "
