@@ -6,9 +6,6 @@ from SafeTrade.config import MONGO_URI
 from SafeTrade.logging import LOGGER
 
 
-# from one string uri you can create multiple databases for different projects/bots. within each database you can store multiple collections, and within each collection you can store multiple documents.
-
-
 class MongoDb:
     """
     MongoDb class to help with basic CRUD ( Create, Read, Delete, Update)
@@ -57,7 +54,7 @@ async def check_mongo_uri(MONGO_URI: str) -> None:
         mongo = AsyncIOMotorClient(MONGO_URI)
         await mongo.server_info()
     except:
-        LOGGER(__name__).error(
+        LOGGER(__name__).error(  # type: ignore
             "Error in Establishing connection with MongoDb URI. Please enter valid uri in the config section."
         )
         exiter(1)

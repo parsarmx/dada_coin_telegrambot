@@ -8,6 +8,8 @@ from pyrogram.types import (
 )
 
 from SafeTrade import bot
+from SafeTrade.database.MongoDB import MongoDb
+from SafeTrade.database.MongoDB.database import saveUser
 from SafeTrade.helpers.start_constants import *
 from SafeTrade.helpers.decorator import rate_limiter
 from SafeTrade.config import OWNER_USERID, SUDO_USERID
@@ -34,6 +36,7 @@ GOBACK_1_BUTTON = [[InlineKeyboardButton("🔙 Go Back", callback_data="START_BU
 @Client.on_message(filters.command(["start", "help"]))  # type: ignore
 @rate_limiter
 async def start(_, message: Message):
+    await saveUser(message.from_user)
     return await message.reply_text(
         START_CAPTION, reply_markup=InlineKeyboardMarkup(START_BUTTON), quote=True
     )

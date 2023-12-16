@@ -8,7 +8,8 @@ async def saveUser(user):
     """
 
     insert_format = {
-        "name": (user.first_name or " ") + (user.last_name or ""),
+        "first_name": (user.first_name or " "),
+        "last_name": (user.last_name or ""),
         "username": user.username,
         "date": datetime.now(timezone.utc),
     }
