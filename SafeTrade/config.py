@@ -16,4 +16,11 @@ except:
     pass
 SUDO_USERID = list(set(SUDO_USERID))
 
+### MONGO
 MONGO_URI = getenv("MONGO_URI")
+
+### REDIS
+REDIS_URL: str = getenv("REDIS_URL")  # type: ignore
+REDIS_PORT = int(getenv("REDIS_PORT"))  # type: ignore
+REDIS_PASSWORD = getenv("REDIS_PASSWORD")
+REDIS_CACHE_TTL = int(getenv("REDIS_CACHE_TTL"))  # type: ignore
