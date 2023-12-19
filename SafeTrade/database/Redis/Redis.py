@@ -8,7 +8,8 @@ import json
 
 class OrderHandler:
     def __init__(self, user_id):
-        self.user_id = user_id
+        self.order_key = f"order:{user_id}"
+        self.listed_order_key = f"listed_orders:{user_id}"
         self.redis_client = redis.StrictRedis(
             host=REDIS_URL, port=REDIS_PORT, decode_responses=True
         )
@@ -17,15 +18,40 @@ class OrderHandler:
         """
         setup an order for a user
         """
-        key = f"order:{self.user_id}"
         serialized_data = json.dumps(data)
 
-        self.redis_client.set(key, serialized_data)
-        self.redis_client.expire(key, REDIS_CACHE_TTL)
+        self.redis_client.set(self.order_key, serialized_data)
+        self.redis_client.expire(self.order_key, REDIS_CACHE_TTL)
 
     async def get_order(self):
-        key = f"order:{self.user_id}"
-        print(self.redis_client.get(key))
+        """
+        get user orders
+        """
+        data = str(self.redis_client.get(self.order_key))
+        return json.loads(data)
+
+    async def update_order(self):
+        """
+        set order status to True
+        it means the order has been completed
+        """
+        pass
+
+    async def set_listed_order(self, data: dict):
+        """
+        setup listed cards for a user
+        """
+        serialized_data = json.dumps(data)
+
+        self.redis_client.set(self.listed_order_key, serialized_data)
+        self.redis_client.expire(self.listed_order_key, REDIS_CACHE_TTL)
+
+    async def get_listed_order(self):
+        """
+        get users listed_orders
+        """
+        data = str(self.redis_client.get(self.listed_order_key))
+        return json.loads(data)
 
 
 async def check_redis_url(url: str, port: int) -> None:
