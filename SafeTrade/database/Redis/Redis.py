@@ -1,7 +1,7 @@
 from sys import exit as exiter
 from SafeTrade.logging import LOGGER
 from SafeTrade.config import REDIS_CACHE_TTL, REDIS_PORT, REDIS_URL
-
+from typing import List, Dict, Any
 import redis
 import json
 
@@ -14,7 +14,7 @@ class OrderHandler:
             host=REDIS_URL, port=REDIS_PORT, decode_responses=True
         )
 
-    async def set_order(self, data: dict):
+    async def set_order(self, data: dict = []):
         """
         setup an order for a user
         """
@@ -23,11 +23,14 @@ class OrderHandler:
         self.redis_client.set(self.order_key, serialized_data)
         self.redis_client.expire(self.order_key, REDIS_CACHE_TTL)
 
-    async def get_order(self):
+    async def get_order(self) -> List[Dict[str, Any]]:
         """
         get user orders
         """
-        data = str(self.redis_client.get(self.order_key))
+        data = self.redis_client.get(self.order_key)
+
+        if data is None:
+            return None
         return json.loads(data)
 
     async def update_order(self):
@@ -36,6 +39,9 @@ class OrderHandler:
         it means the order has been completed
         """
         pass
+
+    async def delete_order(self):
+        self.redis_client.delete(self.order_key)
 
     async def set_listed_order(self, data: dict):
         """
@@ -51,6 +57,9 @@ class OrderHandler:
         get users listed_orders
         """
         data = str(self.redis_client.get(self.listed_order_key))
+
+        if data is None:
+            return None
         return json.loads(data)
 
 
