@@ -1,6 +1,11 @@
 from sys import exit as exiter
 from SafeTrade.logging import LOGGER
-from SafeTrade.config import REDIS_CACHE_TTL, REDIS_PORT, REDIS_URL
+from SafeTrade.config import (
+    REDIS_CACHE_TTL,
+    REDIS_PORT,
+    REDIS_URL,
+    REDIS_ORDERS_CHANNEL,
+)
 from typing import List, Dict, Any
 import redis
 import json
@@ -61,6 +66,12 @@ class OrderHandler:
         if data is None:
             return None
         return json.loads(data)
+
+    async def publish_update(self, message: dict):
+        """
+        Publish a message about an order update to the pubsub channel
+        """
+        self.redis_client.publish(REDIS_ORDERS_CHANNEL, json.dumps(message))
 
 
 async def check_redis_url(url: str, port: int) -> None:

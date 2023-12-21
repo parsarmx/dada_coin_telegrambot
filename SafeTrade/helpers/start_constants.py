@@ -31,6 +31,7 @@ INVALID_TYPE = "لطفا عدد وارد کنید!"
 START_CAPTION = """دادا کوین \n خوش اومدید به ربات فروش دادا کوین اینجا میتونید با خیال و با سرعت بالا کویناتونو رد کنید بره و عشق کنید \n بزن بریم..."""
 TRADE_IN_PROGRESS = "در حال لیست کردن بازیکن\nلطفا منتظر باشید..."
 CARD_HAS_BEEN_LISTED = "بازیکن لیست شد."
+FINISH_TRADE = "خریدتون با موفقیت ثبت شد."
 
 TRADE_CAPTION = """**Here are the list of commands which you can use in bot.\n**"""
 

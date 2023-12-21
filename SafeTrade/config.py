@@ -24,3 +24,4 @@ REDIS_URL: str = getenv("REDIS_URL")  # type: ignore
 REDIS_PORT = int(getenv("REDIS_PORT"))  # type: ignore
 REDIS_PASSWORD = getenv("REDIS_PASSWORD")
 REDIS_CACHE_TTL = int(getenv("REDIS_CACHE_TTL"))  # type: ignore
+REDIS_ORDERS_CHANNEL = getenv("REDIS_ORDERS_CHANNEL")

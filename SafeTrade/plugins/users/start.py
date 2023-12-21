@@ -34,7 +34,7 @@ GOBACK_1_BUTTON = [[InlineKeyboardButton("🔙 Go Back", callback_data="START_BU
 # GOBACK_2_BUTTON = [[InlineKeyboardButton("🔙 Go Back", callback_data="TRADE_BUTTON")]]
 
 
-@Client.on_message(filters.command(["start", "help"]))  # type: ignore
+@Client.on_message(filters.command(["start", "help"]))
 @rate_limiter
 async def start(_, message: Message):
     await saveUser(message.from_user)
@@ -49,7 +49,7 @@ async def start(_, message: Message):
     )
 
 
-@Client.on_callback_query(filters.regex("_BUTTON"))  # type: ignore
+@Client.on_callback_query(filters.regex("_BUTTON"))
 @rate_limiter
 async def botCallbacks(_, CallbackQuery: CallbackQuery):
     clicker_user_id = CallbackQuery.from_user.id
