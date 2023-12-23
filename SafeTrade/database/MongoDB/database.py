@@ -1,3 +1,4 @@
+import uuid
 from SafeTrade.database.MongoDB import MongoDb as db
 from datetime import datetime, timezone
 

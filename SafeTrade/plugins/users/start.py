@@ -41,8 +41,9 @@ async def start(_, message: Message):
     handler = OrderHandler(message.from_user.id)
     orders = await handler.get_order()
 
-    if orders != None:
-        await handler.delete_order()
+    # makes sure user cant set order
+    if orders != None and orders.get("is_active"):
+        await handler.deactive_order()
 
     return await message.reply_text(
         START_CAPTION, reply_markup=InlineKeyboardMarkup(START_BUTTON), quote=True

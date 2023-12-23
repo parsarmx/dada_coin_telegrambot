@@ -1,7 +1,6 @@
 from sys import exit as exiter
 from SafeTrade.logging import LOGGER
 from SafeTrade.config import (
-    REDIS_CACHE_TTL,
     REDIS_PORT,
     REDIS_URL,
     REDIS_ORDERS_CHANNEL,
@@ -9,24 +8,30 @@ from SafeTrade.config import (
 from typing import List, Dict, Any
 import redis
 import json
+import uuid
 
 
 class OrderHandler:
     def __init__(self, user_id):
         self.order_key = f"order:{user_id}"
-        self.listed_order_key = f"listed_orders:{user_id}"
         self.redis_client = redis.StrictRedis(
             host=REDIS_URL, port=REDIS_PORT, decode_responses=True
         )
 
-    async def set_order(self, data: dict = []):
+    async def set_order(self, data=None):
         """
         setup an order for a user
         """
+
+        if data is None:
+            data = {
+                "order_id": str(uuid.uuid4()),
+                "is_active": True,
+            }
+
         serialized_data = json.dumps(data)
 
         self.redis_client.set(self.order_key, serialized_data)
-        self.redis_client.expire(self.order_key, REDIS_CACHE_TTL)
 
     async def get_order(self) -> List[Dict[str, Any]]:
         """
@@ -38,34 +43,24 @@ class OrderHandler:
             return None
         return json.loads(data)
 
-    async def update_order(self):
+    async def deactive_order(self):
         """
-        set order status to True
-        it means the order has been completed
+        deactive order temporary
         """
-        pass
+        data = await self.get_order()
+        data["is_active"] = False
+        await self.set_order(data)
+
+    async def active_order(self):
+        """
+        active order temporary
+        """
+        data = await self.get_order()
+        data["is_active"] = True
+        await self.set_order(data)
 
     async def delete_order(self):
         self.redis_client.delete(self.order_key)
-
-    async def set_listed_order(self, data: dict):
-        """
-        setup listed cards for a user
-        """
-        serialized_data = json.dumps(data)
-
-        self.redis_client.set(self.listed_order_key, serialized_data)
-        self.redis_client.expire(self.listed_order_key, REDIS_CACHE_TTL)
-
-    async def get_listed_order(self):
-        """
-        get users listed_orders
-        """
-        data = str(self.redis_client.get(self.listed_order_key))
-
-        if data is None:
-            return None
-        return json.loads(data)
 
     async def publish_update(self, message: dict):
         """

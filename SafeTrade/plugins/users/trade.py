@@ -5,6 +5,8 @@ from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
 )
+from SafeTrade.database.MongoDB import MongoDb as db
+from SafeTrade.database.MongoDB import saveOrder
 
 from SafeTrade.helpers.start_constants import *
 from SafeTrade.helpers.decorator import rate_limiter
@@ -30,10 +32,16 @@ async def tradeCallbacks(client, CallbackQuery: CallbackQuery):
     message_id = CallbackQuery.message.id
 
     if CallbackQuery.data == "START_TRADE":
-        order = OrderHandler(user_id)
-
+        handler = OrderHandler(user_id)
         # user orders are ready to process
-        await order.set_order()
+        order = await handler.get_order()
+
+        # activate order status to let user set orders
+        if order != None and not order.get("is_active"):
+            await handler.active_order()
+        else:
+            await handler.set_order()
+
         await CallbackQuery.edit_message_text(
             START_TRADE_CAPTION,
         )
