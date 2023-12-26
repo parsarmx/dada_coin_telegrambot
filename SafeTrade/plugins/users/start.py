@@ -9,10 +9,11 @@ from pyrogram.types import (
 
 from SafeTrade import bot
 from SafeTrade.database.MongoDB import MongoDb
+from SafeTrade.database.Redis import OrderHandler
 from SafeTrade.database.MongoDB.database import saveUser
 from SafeTrade.helpers.start_constants import *
 from SafeTrade.helpers.decorator import rate_limiter
-from SafeTrade.config import OWNER_USERID, SUDO_USERID
+from SafeTrade.config import OWNER_USERID, ADMIN_USERID
 
 START_BUTTON = [
     [
@@ -23,7 +24,7 @@ START_BUTTON = [
 
 
 TRADE_BUTTON = [
-    [InlineKeyboardButton("شروع فروش", callback_data="START_TRADE")],
+    [InlineKeyboardButton("انتخاب سفارش", callback_data="START_TRADE")],
     [
         InlineKeyboardButton("🔙 Go Back", callback_data="START_BUTTON"),
     ],
@@ -33,16 +34,23 @@ GOBACK_1_BUTTON = [[InlineKeyboardButton("🔙 Go Back", callback_data="START_BU
 # GOBACK_2_BUTTON = [[InlineKeyboardButton("🔙 Go Back", callback_data="TRADE_BUTTON")]]
 
 
-@Client.on_message(filters.command(["start", "help"]))  # type: ignore
+@Client.on_message(filters.command(["start", "help"]))
 @rate_limiter
 async def start(_, message: Message):
     await saveUser(message.from_user)
+    handler = OrderHandler(message.from_user.id)
+    orders = await handler.get_order()
+
+    # makes sure user cant set order
+    if orders != None and orders.get("is_active"):
+        await handler.deactive_order()
+
     return await message.reply_text(
         START_CAPTION, reply_markup=InlineKeyboardMarkup(START_BUTTON), quote=True
     )
 
 
-@Client.on_callback_query(filters.regex("_BUTTON"))  # type: ignore
+@Client.on_callback_query(filters.regex("_BUTTON"))
 @rate_limiter
 async def botCallbacks(_, CallbackQuery: CallbackQuery):
     clicker_user_id = CallbackQuery.from_user.id

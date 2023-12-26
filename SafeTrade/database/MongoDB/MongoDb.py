@@ -48,6 +48,12 @@ class MongoDb:
         """
         return await self.collection.distinct("_id")
 
+    async def get_document_by_kwargs(self, **kwargs):
+        """
+        Return one document by kwargs
+        """
+        return await self.collection.find_one(kwargs)
+
 
 async def check_mongo_uri(MONGO_URI: str) -> None:
     try:
@@ -68,3 +74,7 @@ database = mongodb.dc_telegrambot
 
 # init users
 users = MongoDb(database.users)
+orders = MongoDb(database.orders)
+order_item = MongoDb(database.order_item)
+chats = MongoDb(database.chats)
+admin_order = MongoDb(database.admin_order)

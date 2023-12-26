@@ -9,6 +9,7 @@ from SafeTrade import config
 from SafeTrade.database.Redis.Redis import check_redis_url
 from SafeTrade.logging import LOGGER
 from SafeTrade.database.MongoDB import check_mongo_uri
+from SafeTrade.database.Redis import OrderHandler
 
 uvloop.install()
 LOGGER(__name__).info("Starting SafeTrade Bot...")
@@ -43,7 +44,7 @@ LOGGER(__name__).info(
 )
 LOGGER(__name__).info("initiating the client....")
 LOGGER(__name__).info("checking MongoDb URI....")
-loop.run_until_complete(check_mongo_uri(config.MONGO_URI))  # type: ignore
+loop.run_until_complete(check_mongo_uri(config.MONGO_URI))
 LOGGER(__name__).info("checkoung Redis URI")
 loop.run_until_complete(check_redis_url(config.REDIS_URL, config.REDIS_PORT))
 
@@ -52,7 +53,7 @@ plugins = dict(root="SafeTrade/plugins")
 bot = Client(
     "SafeTrade",
     api_id=config.API_ID,
-    api_hash=config.API_HASH,  # type: ignore
-    bot_token=config.BOT_TOKEN,  # type: ignore
+    api_hash=config.API_HASH,
+    bot_token=config.BOT_TOKEN,
     plugins=plugins,
 )

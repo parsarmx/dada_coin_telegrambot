@@ -1,57 +1,105 @@
 from sys import exit as exiter
 from SafeTrade.logging import LOGGER
-from SafeTrade.config import REDIS_CACHE_TTL, REDIS_PORT, REDIS_URL
-
+from SafeTrade.config import (
+    REDIS_PORT,
+    REDIS_URL,
+    REDIS_ORDERS_CHANNEL,
+)
+from typing import List, Dict, Any
 import redis
 import json
+import uuid
 
 
 class OrderHandler:
     def __init__(self, user_id):
         self.order_key = f"order:{user_id}"
-        self.listed_order_key = f"listed_orders:{user_id}"
+        self.admin_key = f"admin:{user_id}"
         self.redis_client = redis.StrictRedis(
             host=REDIS_URL, port=REDIS_PORT, decode_responses=True
         )
 
-    async def set_order(self, data: dict):
+    async def set_order(self, data):
         """
         setup an order for a user
         """
+
         serialized_data = json.dumps(data)
 
         self.redis_client.set(self.order_key, serialized_data)
-        self.redis_client.expire(self.order_key, REDIS_CACHE_TTL)
 
-    async def get_order(self):
+    async def get_order(self) -> List[Dict[str, Any]]:
         """
         get user orders
         """
-        data = str(self.redis_client.get(self.order_key))
+        data = self.redis_client.get(self.order_key)
+
+        if data is None:
+            return None
         return json.loads(data)
 
-    async def update_order(self):
+    async def deactive_order(self):
         """
-        set order status to True
-        it means the order has been completed
+        deactive order temporary
         """
-        pass
+        data = await self.get_order()
+        data["is_active"] = False
+        await self.set_order(data)
 
-    async def set_listed_order(self, data: dict):
+    async def active_order(self):
         """
-        setup listed cards for a user
+        active order temporary
         """
+        data = await self.get_order()
+        data["is_active"] = True
+        await self.set_order(data)
+
+    async def delete_order(self):
+        self.redis_client.delete(self.order_key)
+
+    async def publish_update(self, message: dict):
+        """
+        Publish a message about an order update to the pubsub channel
+        """
+        self.redis_client.publish(REDIS_ORDERS_CHANNEL, json.dumps(message))
+
+    async def set_admin(self, data=None):
+        """
+        setup admin access control
+        """
+        if data is None:
+            data = {
+                "can_setup_order": False,
+            }
+
         serialized_data = json.dumps(data)
 
-        self.redis_client.set(self.listed_order_key, serialized_data)
-        self.redis_client.expire(self.listed_order_key, REDIS_CACHE_TTL)
+        self.redis_client.set(self.admin_key, serialized_data)
 
-    async def get_listed_order(self):
+    async def get_admin(self):
         """
-        get users listed_orders
+        get admin access control settings
         """
-        data = str(self.redis_client.get(self.listed_order_key))
+        data = self.redis_client.get(self.admin_key)
+        if data is None:
+            return None
         return json.loads(data)
+
+    async def active_admin_setup_order(self):
+        """
+        active admin access control to send messages
+        """
+        data = await self.get_admin()
+        data["can_setup_order"] = True
+        await self.set_admin(data)
+
+    async def deactive_admin_setup_order(self):
+        """
+        active admin access control to send messages
+        """
+        data = await self.get_admin()
+        data["can_setup_order"] = False
+        await self.set_admin(data)
 
 
 async def check_redis_url(url: str, port: int) -> None:
