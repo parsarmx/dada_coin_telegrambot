@@ -14,20 +14,15 @@ import uuid
 class OrderHandler:
     def __init__(self, user_id):
         self.order_key = f"order:{user_id}"
+        self.admin_key = f"admin:{user_id}"
         self.redis_client = redis.StrictRedis(
             host=REDIS_URL, port=REDIS_PORT, decode_responses=True
         )
 
-    async def set_order(self, data=None):
+    async def set_order(self, data):
         """
         setup an order for a user
         """
-
-        if data is None:
-            data = {
-                "order_id": str(uuid.uuid4()),
-                "is_active": True,
-            }
 
         serialized_data = json.dumps(data)
 
@@ -67,6 +62,44 @@ class OrderHandler:
         Publish a message about an order update to the pubsub channel
         """
         self.redis_client.publish(REDIS_ORDERS_CHANNEL, json.dumps(message))
+
+    async def set_admin(self, data=None):
+        """
+        setup admin access control
+        """
+        if data is None:
+            data = {
+                "can_setup_order": False,
+            }
+
+        serialized_data = json.dumps(data)
+
+        self.redis_client.set(self.admin_key, serialized_data)
+
+    async def get_admin(self):
+        """
+        get admin access control settings
+        """
+        data = self.redis_client.get(self.admin_key)
+        if data is None:
+            return None
+        return json.loads(data)
+
+    async def active_admin_setup_order(self):
+        """
+        active admin access control to send messages
+        """
+        data = await self.get_admin()
+        data["can_setup_order"] = True
+        await self.set_admin(data)
+
+    async def deactive_admin_setup_order(self):
+        """
+        active admin access control to send messages
+        """
+        data = await self.get_admin()
+        data["can_setup_order"] = False
+        await self.set_admin(data)
 
 
 async def check_redis_url(url: str, port: int) -> None:

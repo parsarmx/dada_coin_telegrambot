@@ -13,7 +13,7 @@ from SafeTrade.database.Redis import OrderHandler
 from SafeTrade.database.MongoDB.database import saveUser
 from SafeTrade.helpers.start_constants import *
 from SafeTrade.helpers.decorator import rate_limiter
-from SafeTrade.config import OWNER_USERID, SUDO_USERID
+from SafeTrade.config import OWNER_USERID, ADMIN_USERID
 
 START_BUTTON = [
     [
@@ -24,7 +24,7 @@ START_BUTTON = [
 
 
 TRADE_BUTTON = [
-    [InlineKeyboardButton("شروع فروش", callback_data="START_TRADE")],
+    [InlineKeyboardButton("انتخاب سفارش", callback_data="START_TRADE")],
     [
         InlineKeyboardButton("🔙 Go Back", callback_data="START_BUTTON"),
     ],

@@ -5,17 +5,47 @@ from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
 )
+
+
 from SafeTrade.database.MongoDB import MongoDb as db
-from SafeTrade.database.MongoDB import saveOrder
 
 from SafeTrade.helpers.start_constants import *
 from SafeTrade.helpers.decorator import rate_limiter
-from SafeTrade.database.Redis import OrderHandler
 
 FINALIZE_TRADE = [
     [
         InlineKeyboardButton("دریافت رسید", callback_data="GET_RECEIPT"),
     ],
+]
+
+DONE_TRADE = [
+    [
+        InlineKeyboardButton("ادامه خرید", callback_data="CONTINUE_TRADE"),
+        InlineKeyboardButton("پایان فروش", callback_data="FINISH_TRADE"),
+    ],
+]
+
+NO_ACTIVE_ORDER = [
+    [
+        InlineKeyboardButton("BACK", callback_data="START_BUTTON"),
+    ]
+]
+
+
+# TODO:this function create one order for now
+# should change later
+async def orderButtons():
+    order = await db.admin_order.get_document_by_kwargs(status="P")
+    return [
+        InlineKeyboardButton(
+            f"{order.get('amount'):,} - {order.get('status')}",
+            callback_data=f"{order.get('_id')}:SELECT",
+        )
+    ]
+
+
+BACK_BUTTON = [
+    InlineKeyboardButton("BACK", callback_data="START_BUTTON"),
 ]
 
 
@@ -32,21 +62,27 @@ async def tradeCallbacks(client, CallbackQuery: CallbackQuery):
     message_id = CallbackQuery.message.id
 
     if CallbackQuery.data == "START_TRADE":
-        handler = OrderHandler(user_id)
-        # user orders are ready to process
-        order = await handler.get_order()
-
+        admin_order = await db.admin_order.get_document_by_kwargs(status="P")
         # activate order status to let user set orders
-        if order != None and not order.get("is_active"):
-            await handler.active_order()
-        else:
-            await handler.set_order()
-
+        if admin_order is None:
+            return await CallbackQuery.edit_message_text(
+                NO_ACTIVE_ORDER_AVAILABLE,
+                reply_markup=InlineKeyboardMarkup(NO_ACTIVE_ORDER),
+            )
+        buttons = await orderButtons()
         await CallbackQuery.edit_message_text(
-            START_TRADE_CAPTION,
+            CHOOSE_AN_ORDER,
+            reply_markup=InlineKeyboardMarkup([buttons, BACK_BUTTON]),
+        )
+
+    elif CallbackQuery.data == "DONE_TRADE":
+        await CallbackQuery.edit_message_text(
+            FINISH_TRADE,
+            reply_markup=InlineKeyboardMarkup(DONE_TRADE),
         )
 
     elif CallbackQuery.data == "CONTINUE_TRADE":
+        # TODO: should check if user has bought cart
         try:
             # Delete the last message sent by the bot
             await client.delete_messages(chat_id, message_id)
