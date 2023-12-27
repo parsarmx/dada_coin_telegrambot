@@ -15,9 +15,9 @@ except RuntimeError:
 
 # Setup your Telegram client
 tele_client = TelegramClient(
-    "6674884315:AAGDLXqblYPwLVN8L9iR4MlaWjTNXsDuIik",
-    "1485960",
-    "30df8f9d74b48f998e22419f62950047",
+    "session",
+    "api_id",
+    "api_hash",
 )
 tele_client.start()
 
