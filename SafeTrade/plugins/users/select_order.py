@@ -32,14 +32,17 @@ async def selectOrderCallbacks(_, CallbackQuery: CallbackQuery):
         return await CallbackQuery.answer("This command is not initiated by you.")
 
     admin_order_id, _ = CallbackQuery.data.split(":")
-    user_order = await db.orders.get_document_by_kwargs(status="P")
+    user_order = await db.orders.get_document_by_kwargs(
+        status="P",
+        user_id=user_id,
+    )
 
     # check if user order is already is in redis
-    if order != None and not order.get("is_active"):
+    if order != None and user_order != None and not order.get("is_active"):
         await handler.active_order()
 
     # if its not in redis check if user has any active order for this admin_order
-    elif user_order == None and user_order != None:
+    elif order == None and user_order != None:
         if admin_order_id == user_order.get("admin_order_id"):
             data = {
                 "order_id": user_order.get("_id"),
@@ -60,4 +63,4 @@ async def selectOrderCallbacks(_, CallbackQuery: CallbackQuery):
         await saveOrder(order_id, user_id, admin_order_id)
         await handler.set_order(data)
 
-    await CallbackQuery.edit_message_text(SETUP_ADMIN_ORDER)
+    await CallbackQuery.edit_message_text(START_TRADE_CAPTION)

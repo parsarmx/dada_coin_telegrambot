@@ -8,7 +8,7 @@ from pyrogram.types import (
 
 
 from SafeTrade.database.MongoDB import MongoDb as db
-
+from SafeTrade.database.Redis import OrderHandler
 from SafeTrade.helpers.start_constants import *
 from SafeTrade.helpers.decorator import rate_limiter
 
@@ -28,6 +28,12 @@ DONE_TRADE = [
 NO_ACTIVE_ORDER = [
     [
         InlineKeyboardButton("BACK", callback_data="START_BUTTON"),
+    ]
+]
+
+BOUGHT_CARD = [
+    [
+        InlineKeyboardButton("خریدم", callback_data="DONE_TRADE"),
     ]
 ]
 
@@ -60,6 +66,7 @@ async def tradeCallbacks(client, CallbackQuery: CallbackQuery):
 
     chat_id = CallbackQuery.message.chat.id
     message_id = CallbackQuery.message.id
+    handler = OrderHandler(user_id=user_id)
 
     if CallbackQuery.data == "START_TRADE":
         admin_order = await db.admin_order.get_document_by_kwargs(status="P")
@@ -76,13 +83,26 @@ async def tradeCallbacks(client, CallbackQuery: CallbackQuery):
         )
 
     elif CallbackQuery.data == "DONE_TRADE":
+        # TODO: should check if user has bought card successfully
+        has_bought = True
+        if not has_bought:
+            return await CallbackQuery.edit_message_text(
+                CARD_STILL_EXISTS,
+                reply_markup=InlineKeyboardMarkup(BOUGHT_CARD),
+            )
+        user_order = handler.get_order()
+        order_id = user_order.get("order_id")
+
+        order_item = db.order_item.get_document_by_kwargs(
+            order_id=order_id, is_listed=True, has_bought=False, is_verified=True
+        )
+
         await CallbackQuery.edit_message_text(
             FINISH_TRADE,
             reply_markup=InlineKeyboardMarkup(DONE_TRADE),
         )
 
     elif CallbackQuery.data == "CONTINUE_TRADE":
-        # TODO: should check if user has bought cart
         try:
             # Delete the last message sent by the bot
             await client.delete_messages(chat_id, message_id)

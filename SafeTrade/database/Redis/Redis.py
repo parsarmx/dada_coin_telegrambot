@@ -22,6 +22,11 @@ class OrderHandler:
     async def set_order(self, data):
         """
         setup an order for a user
+        {
+            "order_id": str,
+            "admin_order_id": str,
+            "is_active": bool,
+        }
         """
 
         serialized_data = json.dumps(data)

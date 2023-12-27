@@ -43,14 +43,15 @@ async def tradeHandler(
 
     # initiate and order item
     try:
-        await saveOrderItem(str(uuid.uuid4()), order_id, supply=amount)
+        order_item_id = str(uuid.uuid4())
+        await saveOrderItem(order_item_id, order_id, supply=amount)
         progress_message = await message.reply_text(
             TRADE_IN_PROGRESS, reply_to_message_id=message_id
         )
 
         data = {
-            "id": str(uuid.uuid4()),
-            "amount": text,
+            "order_item_id": order_item_id,
+            "amount": amount,
             "is_done": False,
             "chat_id": message.chat.id,
             "message_id": progress_message.id,
