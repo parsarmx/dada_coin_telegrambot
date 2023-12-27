@@ -2,9 +2,8 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
-# removing old logs file if they exist.
 try:
-    os.remove("bot_logs.txt")
+    os.remove("soheil_logs.txt")
 except:
     pass
 
