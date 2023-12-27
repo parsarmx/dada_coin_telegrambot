@@ -8,3 +8,4 @@ TelegramBot.session
 SafeTrade.session
 SafeTrade.session-journal
 __pycache__
+.vscode
