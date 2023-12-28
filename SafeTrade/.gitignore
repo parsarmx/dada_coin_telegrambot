@@ -1,0 +1,11 @@
+venv/
+.env
+logs.txt
+TelegramBot.session
+*.pyc
+*.session
+*.session-journal
+SafeTrade.session
+SafeTrade.session-journal
+__pycache__
+.vscode

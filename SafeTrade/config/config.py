@@ -2,7 +2,7 @@ import json
 from os import getenv
 from dotenv import load_dotenv
 
-load_dotenv(".env")
+load_dotenv("SafeTrade/.env")
 
 API_ID = int(getenv("API_ID"))  # type: ignore
 API_HASH = getenv("API_HASH")
