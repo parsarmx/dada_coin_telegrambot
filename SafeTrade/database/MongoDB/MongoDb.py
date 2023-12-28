@@ -3,7 +3,7 @@ from sys import exit as exiter
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from SafeTrade.config import MONGO_URI
-from SafeTrade.logging import LOGGER
+from SafeTrade.logs import LOGGER
 
 
 class MongoDb:

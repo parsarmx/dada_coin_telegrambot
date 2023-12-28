@@ -1,5 +1,5 @@
 from sys import exit as exiter
-from SafeTrade.logging import LOGGER
+from SafeTrade.logs import LOGGER
 from SafeTrade.config import (
     REDIS_PORT,
     REDIS_URL,

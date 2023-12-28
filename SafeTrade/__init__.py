@@ -7,7 +7,7 @@ import uvloop
 from pyrogram.client import Client
 from SafeTrade import config
 from SafeTrade.database.Redis.Redis import check_redis_url
-from SafeTrade.logging import LOGGER
+from SafeTrade.logs import LOGGER
 from SafeTrade.database.MongoDB import check_mongo_uri
 from SafeTrade.database.Redis import OrderHandler
 

@@ -17,7 +17,7 @@ logging.basicConfig(
     ],
 )
 
-logging.getLogger("pyrogram").setLevel(logging.ERROR)
+logging.getLogger("soheil").setLevel(logging.ERROR)
 
 
 def LOGGER(name: str) -> logging.Logger:

@@ -1,5 +1,5 @@
 from SafeTrade import bot
-from SafeTrade.logging import LOGGER
+from SafeTrade.logs import LOGGER
 
 LOGGER(__name__).info("client successfully initiated....")
 if __name__ == "__main__":
