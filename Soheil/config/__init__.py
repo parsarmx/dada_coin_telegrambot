@@ -1,1 +1,1 @@
-from Soheil.config import config
+from Soheil.config.config import *

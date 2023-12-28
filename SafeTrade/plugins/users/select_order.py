@@ -26,7 +26,7 @@ async def selectOrderCallbacks(_, CallbackQuery: CallbackQuery):
     user_id = CallbackQuery.message.reply_to_message.from_user.id
     handler = OrderHandler(user_id=user_id)
     # user orders are ready to process
-    order = await handler.get_order()
+    cached_order = await handler.get_order()
 
     if clicker_user_id != user_id:
         return await CallbackQuery.answer("This command is not initiated by you.")
@@ -35,11 +35,15 @@ async def selectOrderCallbacks(_, CallbackQuery: CallbackQuery):
     user_order = await db.orders.get_document_by_kwargs(status="P")
 
     # check if user order is already is in redis
-    if order != None and not order.get("is_active"):
+    if (
+        cached_order != None
+        and user_order != None
+        and not cached_order.get("is_active")
+    ):
         await handler.active_order()
 
     # if its not in redis check if user has any active order for this admin_order
-    elif user_order == None and user_order != None:
+    elif cached_order == None and user_order != None:
         if admin_order_id == user_order.get("admin_order_id"):
             data = {
                 "order_id": user_order.get("_id"),

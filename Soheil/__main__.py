@@ -1,8 +1,17 @@
-# from config import DRIVER
+import redis
+import time
+import asyncio
+from telethon import TelegramClient, types
+import json
+from Soheil.core import listen_for_admin_order, listen_for_order_item
 
-# DRIVER.get("")
-
-# if __name__ == "__main__":
-#     email = input("email: ")
-#     password = input("password: ")
-#     backup_code = input("backup code")
+# is_active = True
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    tasks = [listen_for_admin_order(), listen_for_order_item()]
+    try:
+        loop.run_until_complete(asyncio.gather(*tasks))
+    except KeyboardInterrupt:
+        pass
+    finally:
+        loop.close()
