@@ -83,7 +83,9 @@ async def adminCallbscks(_, CallbackQuery: CallbackQuery):
         del active_order["created_at"]
         del active_order["updated_at"]
 
-        print(active_order)
+        active_order["chat_id"] = CallbackQuery.message.chat.id
+        active_order["message_id"] = CallbackQuery.message.id
+        print("WTF>>")
         await handler.publish_update(
             active_order,
             REDIS_ADMIN_CHANNEL,

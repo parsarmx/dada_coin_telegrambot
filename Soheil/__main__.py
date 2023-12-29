@@ -10,8 +10,10 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     tasks = [listen_for_admin_order(), listen_for_order_item()]
     try:
+        # Gather and run the tasks concurrently
         loop.run_until_complete(asyncio.gather(*tasks))
     except KeyboardInterrupt:
-        pass
+        # Handle keyboard interrupt (Ctrl+C) to gracefully shutdown
+        print("KeyboardInterrupt: Cancelling tasks...")
     finally:
         loop.close()

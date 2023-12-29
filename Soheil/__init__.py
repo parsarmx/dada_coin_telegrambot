@@ -1,5 +1,3 @@
-import redis
-
 from Soheil.logs import LOGGER
 from Soheil.config import EA_LOGIN_PATH, DRIVER, TELE_CLIENT
 
