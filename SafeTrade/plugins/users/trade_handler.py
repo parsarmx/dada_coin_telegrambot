@@ -2,9 +2,10 @@ import uuid
 from pyrogram.types import Message, InlineKeyboardButton
 
 from SafeTrade.helpers.start_constants import *
-from SafeTrade.database.MongoDB import saveOrder, saveOrderItem
+from SafeTrade.database.MongoDB import saveOrderItem
 from SafeTrade.database.MongoDB import MongoDb as db
 from SafeTrade.database.Redis import OrderHandler
+from SafeTrade.config import REDIS_ORDERS_CHANNEL
 
 ORDER_OPTIONS = [
     [
@@ -56,7 +57,10 @@ async def tradeHandler(
             "message_id": progress_message.id,
             "user_id": user_id,
         }
-        await handler.publish_update(data)
+        await handler.publish_update(
+            data,
+            REDIS_ORDERS_CHANNEL,
+        )
     except Exception as e:
         # TODO: should apply logger
         print(f"Error: {e}")

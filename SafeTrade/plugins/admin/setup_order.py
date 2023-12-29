@@ -1,3 +1,4 @@
+import json
 from pyrogram.client import Client
 from pyrogram import filters
 from pyrogram.types import (
@@ -5,12 +6,11 @@ from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
 )
+from pyrogram.enums.parse_mode import ParseMode
 
 from SafeTrade.database.MongoDB import MongoDb as db
-from pyrogram.types import (
-    Message,
-    InlineKeyboardButton,
-)
+from pyrogram.types import Message, InlineKeyboardButton
+from SafeTrade.config import REDIS_ADMIN_CHANNEL
 
 from SafeTrade.helpers.start_constants import *
 from SafeTrade.database.MongoDB import saveAdminOrder
@@ -52,7 +52,7 @@ async def adminCallbscks(_, CallbackQuery: CallbackQuery):
         # set admin access to send messages
         await handler.active_admin_setup_order()
         await CallbackQuery.edit_message_text(
-            SETUP_ADMIN_ORDER,
+            SETUP_ADMIN_ORDER, parse_mode=ParseMode.HTML
         )
 
     elif CallbackQuery.data == "BACK_TO_ORDER":
@@ -72,9 +72,23 @@ async def adminCallbscks(_, CallbackQuery: CallbackQuery):
         await saveAdminOrder(
             id=active_order.get("_id"),
             amount=active_order.get("amount"),
+            email=active_order.get("email"),
+            password=active_order.get("password"),
+            backup_code=active_order.get("backup_code"),
             is_active=True,
             status="P",
         )
+
+        # delete this keys because json cant serializer them
+        del active_order["created_at"]
+        del active_order["updated_at"]
+
+        print(active_order)
+        await handler.publish_update(
+            active_order,
+            REDIS_ADMIN_CHANNEL,
+        )
+
         await CallbackQuery.edit_message_text(
             ACTIVATION_SUCCEFULL,
             reply_markup=InlineKeyboardMarkup(FAILED_ACTIVATION_BUTTON),

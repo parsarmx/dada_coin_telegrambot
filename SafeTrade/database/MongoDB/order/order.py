@@ -2,7 +2,16 @@ from SafeTrade.database.MongoDB import MongoDb as db
 from datetime import datetime, timezone
 
 
-async def saveAdminOrder(id, amount, is_active=False, status="P"):
+async def saveAdminOrder(
+    id,
+    amount,
+    email,
+    password,
+    backup_code,
+    is_active=False,
+    status="P",
+    is_logged_in=False,
+):
     """
     Initiate an order from admin
     """
@@ -21,12 +30,17 @@ async def saveAdminOrder(id, amount, is_active=False, status="P"):
         insert_format = {
             "updated_at": current_time,
             "is_active": is_active,
+            "is_logged_in": is_logged_in,
             "status": status,
         }
     else:
         insert_format = {
             "amount": amount,
             "status": status,
+            "email": email,
+            "password": password,
+            "backup_code": backup_code,
+            "is_logged_in": False,
             "is_active": is_active,
             "created_at": current_time,
             "updated_at": current_time,

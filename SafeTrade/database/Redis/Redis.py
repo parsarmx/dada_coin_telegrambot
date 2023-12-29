@@ -57,11 +57,11 @@ class OrderHandler:
     async def delete_order(self):
         self.redis_client.delete(self.order_key)
 
-    async def publish_update(self, message: dict):
+    async def publish_update(self, message: dict, channel):
         """
         Publish a message about an order update to the pubsub channel
         """
-        self.redis_client.publish(REDIS_ORDERS_CHANNEL, json.dumps(message))
+        self.redis_client.publish(channel, json.dumps(message))
 
     async def set_admin(self, data=None):
         """
