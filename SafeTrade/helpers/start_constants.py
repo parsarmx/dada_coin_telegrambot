@@ -38,9 +38,7 @@ ACTIVE_ORDER_EXISTS = "در حال حاضر یک سفارش فعال دارید"
 INVALID_FORMAT = "فرمت ارسال اطلاعات نا معتبر است دوباره تلاش کنید!"
 
 FAILED_ACTIVATION = "فعالسازیتون تایید نشد!"
-ACTIVATION_SUCCEFULL = (
-    "سفارش شما فعال شد و از الان به بعد کاربران میتونن کوین انتقال بدن"
-)
+ACTIVATION_IN_PROGRESS = "سفارش در حال فعالسازی..."
 NO_ACTIVE_ORDER_AVAILABLE = "در حال حاضر سفارش فعال وجود ندارد"
 
 TRADE_CAPTION = """**Here are the list of commands which you can use in bot.\n**"""

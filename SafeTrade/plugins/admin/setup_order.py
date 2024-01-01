@@ -85,13 +85,12 @@ async def adminCallbscks(_, CallbackQuery: CallbackQuery):
 
         active_order["chat_id"] = CallbackQuery.message.chat.id
         active_order["message_id"] = CallbackQuery.message.id
-        print("WTF>>")
         await handler.publish_update(
             active_order,
             REDIS_ADMIN_CHANNEL,
         )
 
         await CallbackQuery.edit_message_text(
-            ACTIVATION_SUCCEFULL,
+            ACTIVATION_IN_PROGRESS,
             reply_markup=InlineKeyboardMarkup(FAILED_ACTIVATION_BUTTON),
         )
