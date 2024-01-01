@@ -35,16 +35,15 @@ CARD_HAS_BEEN_LISTED = "بازیکن لیست شد."
 FINISH_TRADE = "خریدتون با موفقیت ثبت شد."
 ORDER_SAVED = "سفارشتون درحال حاضر ذخیره شده\nمیخواید فعالش کنید؟"
 ACTIVE_ORDER_EXISTS = "در حال حاضر یک سفارش فعال دارید"
+INVALID_FORMAT = "فرمت ارسال اطلاعات نا معتبر است دوباره تلاش کنید!"
+
 FAILED_ACTIVATION = "فعالسازیتون تایید نشد!"
-ACTIVATION_SUCCEFULL = (
-    "سفارش شما فعال شد و از الان به بعد کاربران میتونن کوین انتقال بدن"
-)
+ACTIVATION_IN_PROGRESS = "سفارش در حال فعالسازی..."
 NO_ACTIVE_ORDER_AVAILABLE = "در حال حاضر سفارش فعال وجود ندارد"
 
 TRADE_CAPTION = """**Here are the list of commands which you can use in bot.\n**"""
 
 ABOUT_CAPTION = "صفحه درباره ما ... بعدا در رابط با این بخش باید بحث بشه"
-SETUP_ADMIN_ORDER = "لطفا مقدار سفارش رو وارد کنید"
-
+SETUP_ADMIN_ORDER = "لطفا مقدار سفارش رو به فرمت زیر وارد کنید وارد کنید\n\n<code>email password backup_code amount</code>\n\nاول ایمیل به صورت کامل بعد پسوورد و بعدش کد بکاپ"
 START_TRADE_CAPTION = "برای شروع فروش مقدار سفارش خودتون رو وارد کنید \n مثال: 100000 "
 CHOOSE_AN_ORDER = "لطفا یکی از سفارش های زیر را انتخاب کنید"

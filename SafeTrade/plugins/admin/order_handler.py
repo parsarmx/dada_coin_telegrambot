@@ -20,9 +20,17 @@ ORDER_EXISTS = [
 ]
 
 
-async def orderHandler(text, message: Message, message_id):
+async def orderHandler(text: str, message: Message, message_id):
     try:
-        amount = int(text)
+        email, password, backup, amount = text.split(" ")
+    except:
+        return await message.reply_text(
+            INVALID_FORMAT,
+            reply_to_message_id=message_id,
+        )
+
+    try:
+        amount = int(amount)
     except ValueError:
         return await message.reply_text(
             INVALID_TYPE, quote=True, reply_to_message_id=message_id
@@ -35,7 +43,13 @@ async def orderHandler(text, message: Message, message_id):
             quote=True,
         )
 
-    await saveAdminOrder(id=str(uuid.uuid4()), amount=amount)
+    await saveAdminOrder(
+        id=str(uuid.uuid4()),
+        amount=amount,
+        email=email,
+        password=password,
+        backup_code=backup,
+    )
     return await message.reply_text(
         ORDER_SAVED, reply_markup=InlineKeyboardMarkup(SAVED_ORDER), quote=True
     )
