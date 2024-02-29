@@ -24,3 +24,14 @@ Parsa Ramezani
 8:51 PM
 fix(SafeTrade): comment
 feat(SafeTrade): comment
+
+=================================
+You can run the interactive mongo shell by running the following command:
+
+docker run -it -p 28000:27017 --name mongoContainer mongo:latest mongosh
+
+
+Otherwise, if your container is already running, you can use the exec command:
+
+docker exec -it mongoContainer mongosh
+=================================
