@@ -47,3 +47,6 @@ ABOUT_CAPTION = "صفحه درباره ما ... بعدا در رابط با ای
 SETUP_ADMIN_ORDER = "لطفا مقدار سفارش رو به فرمت زیر وارد کنید وارد کنید\n\n<code>email password backup_code amount</code>\n\nاول ایمیل به صورت کامل بعد پسوورد و بعدش کد بکاپ"
 START_TRADE_CAPTION = "برای شروع فروش مقدار سفارش خودتون رو وارد کنید \n مثال: 100000 "
 CHOOSE_AN_ORDER = "لطفا یکی از سفارش های زیر را انتخاب کنید"
+
+
+ABOUT_US_CAPTION = "THIS IS A TEST, GO BACK TURD."
