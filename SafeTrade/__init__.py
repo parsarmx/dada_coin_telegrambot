@@ -2,7 +2,7 @@ import sys
 import time
 
 from asyncio import get_event_loop, new_event_loop, set_event_loop
-import winloop
+import uvloop
 
 from pyrogram.client import Client
 from SafeTrade import config
@@ -11,7 +11,7 @@ from SafeTrade.logs import LOGGER
 from SafeTrade.database.MongoDB import check_mongo_uri
 from SafeTrade.database.Redis import OrderHandler
 
-winloop.install()
+uvloop.install()
 LOGGER(__name__).info("Starting SafeTrade Bot...")
 BotStartTime = time.time()
 
