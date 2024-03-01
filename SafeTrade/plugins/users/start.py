@@ -59,7 +59,6 @@ async def start(_, message: Message):
     )
 
 
-@Client.on_message(filters.command(["about_us"]))
 @rate_limiter
 async def about_us(_, message: Message):
     return await message.reply_text(
