@@ -20,11 +20,20 @@ START_BUTTON = [
         InlineKeyboardButton("📖 فروش", callback_data="TRADE_BUTTON"),
         InlineKeyboardButton("👨‍💻 نحوه استفاده", callback_data="ABOUT_BUTTON"),
     ],
+    [
+        InlineKeyboardButton("درباره ما 💬", callback_data="ABOUT_US_BUTTON"),
+    ],
 ]
 
 
 TRADE_BUTTON = [
     [InlineKeyboardButton("انتخاب سفارش", callback_data="START_TRADE")],
+    [
+        InlineKeyboardButton("🔙 Go Back", callback_data="START_BUTTON"),
+    ],
+]
+
+ABOUT_US_BUTTON = [
     [
         InlineKeyboardButton("🔙 Go Back", callback_data="START_BUTTON"),
     ],
@@ -50,6 +59,15 @@ async def start(_, message: Message):
     )
 
 
+@rate_limiter
+async def about_us(_, message: Message):
+    return await message.reply_text(
+        ABOUT_US_CAPTION,
+        reply_markup=InlineKeyboardMarkup(GOBACK_1_BUTTON),
+        quote=True
+    )
+
+
 @Client.on_callback_query(filters.regex("_BUTTON"))
 @rate_limiter
 async def botCallbacks(_, CallbackQuery: CallbackQuery):
@@ -72,6 +90,11 @@ async def botCallbacks(_, CallbackQuery: CallbackQuery):
     elif CallbackQuery.data == "START_BUTTON":
         await CallbackQuery.edit_message_text(
             START_CAPTION, reply_markup=InlineKeyboardMarkup(START_BUTTON)
+        )
+
+    elif CallbackQuery.data == "ABOUT_US_BUTTON":   
+        await CallbackQuery.edit_message_text(
+            ABOUT_US_CAPTION, reply_markup=InlineKeyboardMarkup(GOBACK_1_BUTTON)
         )
 
     await CallbackQuery.answer()

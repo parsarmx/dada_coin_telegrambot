@@ -1,0 +1,19 @@
+When there is a new /start in town, previous messages should stop working
+or
+all messages get synced, so it prevents conflicts and missfunctions.
+
++---------------+
+SafeTrade\database\MongoDB\database.py Line 14
+if username is empty then it should save something. (this one solved, i saw th data base and noticed it gets saved automaticaly)
+
+also its a betther idea to save the numeric id of user hence its a constant till she/he deletes the account and recreates it
+
+also you are dealing with money, to be carfull about criminal actions you should only accept +98 numbers, so you should ask for them to share their number 
+( not at the begining since its not that kind much of a user friendly action but we should prompt it before let them do anything that involves transactions)
+
++---------------+
+question : strt.py => why two returns? callback query and in function message.reply_text(reply_markup=)
+
++---------------+
+maybe there is  a way to use proxy 
+just in case we wanted an iranian host.

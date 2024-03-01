@@ -1,0 +1,37 @@
+Parsa Ramezani
+8:36 PM
+docker exec -it mongodb mongosh
+
+Parsa Ramezani
+8:38 PM
+docker run -d -p 27017:27017 --name mongodb mongo
+
+Parsa Ramezani
+8:40 PM
+docker run --name redis -d -p 6379:6379 redis
+
+Parsa Ramezani
+8:42 PM
+pip install pyrate_limiter==2.10.0
+
+Parsa Ramezani
+8:49 PM
+fix
+feat
+fix/SafeTrade/about_us
+
+Parsa Ramezani
+8:51 PM
+fix(SafeTrade): comment
+feat(SafeTrade): comment
+
+=================================
+You can run the interactive mongo shell by running the following command:
+
+docker run -it -p 28000:27017 --name mongoContainer mongo:latest mongosh
+
+
+Otherwise, if your container is already running, you can use the exec command:
+
+docker exec -it mongoContainer mongosh
+=================================
