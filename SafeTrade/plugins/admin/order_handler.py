@@ -1,9 +1,10 @@
 import uuid
-from SafeTrade.helpers.start_constants import *
-from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
-from SafeTrade.database.MongoDB import saveAdminOrder
-from SafeTrade.database.MongoDB import MongoDb as db
 
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+
+from SafeTrade.database.MongoDB import MongoDb as db
+from SafeTrade.database.MongoDB import saveAdminOrder
+from SafeTrade.helpers.start_constants import *
 
 SAVED_ORDER = [
     [
@@ -43,8 +44,9 @@ async def orderHandler(text: str, message: Message, message_id):
             quote=True,
         )
 
+    order_id = str(uuid.uuid4())
     await saveAdminOrder(
-        id=str(uuid.uuid4()),
+        id=order_id,
         amount=amount,
         email=email,
         password=password,

@@ -2,8 +2,8 @@ from sys import exit as exiter
 
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from SafeTrade.config import MONGO_URI
-from SafeTrade.logs import LOGGER
+from Soheil.config import MONGO_URI
+from Soheil.logs import LOGGER
 
 
 class MongoDb:
@@ -54,13 +54,21 @@ class MongoDb:
         """
         return await self.collection.find_one(kwargs)
 
+    async def get_documents_by_kwargs(self, **kwargs):
+        """
+        Return documents matching the given kwargs
+        """
+        cursor = self.collection.find(kwargs)
+        documents = await cursor.to_list(length=None)
+        return documents
+
 
 async def check_mongo_uri(MONGO_URI: str) -> None:
     try:
         mongo = AsyncIOMotorClient(MONGO_URI)
         await mongo.server_info()
     except:
-        LOGGER(__name__).error(  # type: ignore
+        LOGGER(__name__).error(
             "Error in Establishing connection with MongoDb URI. Please enter valid uri in the config section."
         )
         exiter(1)
@@ -74,6 +82,8 @@ database = mongodb.dc_telegrambot
 
 # init objects
 users = MongoDb(database.users)
+# we should use this insted of csv file for player_cards prices (PricePishe)
+player_cards = MongoDb(database.player_cards)
 orders = MongoDb(database.orders)
 order_item = MongoDb(database.order_item)
 chats = MongoDb(database.chats)

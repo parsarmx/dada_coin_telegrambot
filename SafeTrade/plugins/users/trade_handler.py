@@ -1,11 +1,12 @@
 import uuid
-from pyrogram.types import Message, InlineKeyboardButton
 
-from SafeTrade.helpers.start_constants import *
-from SafeTrade.database.MongoDB import saveOrderItem
-from SafeTrade.database.MongoDB import MongoDb as db
-from SafeTrade.database.Redis import OrderHandler
+from pyrogram.types import InlineKeyboardButton, Message
+
 from SafeTrade.config import REDIS_ORDERS_CHANNEL
+from SafeTrade.database.MongoDB import MongoDb as db
+from SafeTrade.database.MongoDB import saveOrderItem
+from SafeTrade.database.Redis import OrderHandler
+from SafeTrade.helpers.start_constants import *
 
 ORDER_OPTIONS = [
     [
@@ -25,6 +26,7 @@ async def tradeHandler(
     user_id: user id that trying to sell coins
     handler: OrderHandler object to publish data to Soheil(the crawler) service
     """
+    print(text)
     try:
         amount = int(text)
     except ValueError:
@@ -44,14 +46,17 @@ async def tradeHandler(
 
     # initiate and order item
     try:
-        await saveOrderItem(str(uuid.uuid4()), order_id, supply=amount)
+
+        user_order = await handler.get_order()
+        await saveOrderItem(user_order.get("order_id"), order_id, supply=amount)
         progress_message = await message.reply_text(
             TRADE_IN_PROGRESS, reply_to_message_id=message_id
         )
 
         data = {
-            "id": str(uuid.uuid4()),
+            "id": user_order.get("order_id"),
             "amount": text,
+            "admin_order_id": user_order.get("admin_order_id"),
             "is_done": False,
             "chat_id": message.chat.id,
             "message_id": progress_message.id,

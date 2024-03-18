@@ -1,5 +1,6 @@
-from SafeTrade.database.MongoDB import MongoDb as db
 from datetime import datetime, timezone
+
+from SafeTrade.database.MongoDB import MongoDb as db
 
 
 async def saveAdminOrder(
@@ -82,7 +83,7 @@ async def saveOrder(order_id, user_id, admin_order_id, status="P"):
     await db.orders.update_document(order_id, insert_format)
 
 
-async def saveOrderItem(order_item_id, order_id, supply: int):
+async def saveOrderItem(order_item_id, admin_order_id, supply: int):
     """
     save orderItem for an order
     """
@@ -90,8 +91,8 @@ async def saveOrderItem(order_item_id, order_id, supply: int):
     current_time = datetime.now(timezone.utc)
 
     insert_format = {
-        "order_id": order_id,
-        "sypply": supply,
+        "order_id": admin_order_id,
+        "supply": supply,
         "card_amount": None,
         "buy_price": None,
         "sell_price": None,

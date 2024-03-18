@@ -1,8 +1,9 @@
-from selenium import webdriver
 from os import getenv
-from dotenv import load_dotenv
-from telethon import TelegramClient
+
 import redis
+from dotenv import load_dotenv
+from selenium import webdriver
+from telethon import TelegramClient
 
 load_dotenv("Soheil/.env")
 
@@ -24,6 +25,7 @@ SIGNED_IN_BY_CONSOLE_TEXT = getenv("SIGNED_IN_BY_CONSOLE_TEXT")
 SIDNED_IN_BY_CONSOL_BUTTON = getenv("SIDNED_IN_BY_CONSOL_BUTTON")
 TWO_STEP_CODE_INVALID = getenv("TWO_STEP_CODE_INVALID")
 PASSWORD_OR_EMAIL_IS_INCORRECT = getenv("PASSWORD_OR_EMAIL_IS_INCORRECT")
+MESSAGE_FROM_EA_XPATH = getenv("MESSAGE_FROM_EA_XPATH")
 
 # REDIS
 REDIS_ORDER_CHANNEL = getenv("REDIS_ORDER_CHANNEL")
@@ -48,3 +50,6 @@ CLIENT = redis.StrictRedis(
     port=REDIS_PORT,
     decode_responses=True,
 )
+
+### MONGO
+MONGO_URI = getenv("MONGO_URI")
